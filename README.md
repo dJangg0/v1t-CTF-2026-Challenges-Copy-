@@ -18,20 +18,20 @@ Welcome to the V1t CTF 2026 repository! Here is a complete list of all the chall
 
 ## Forensics
 - [Big Mac](./Forensics/Big%20Mac)
-- [Green Goblin](./Forensics/Green%20Goblin)
-- [Nice Try](./Forensics/Nice%20Try)
+- [Green Goblin](./Forensics/Green%20Goblin) - [Writeup](./Forensics/Green%20Goblin/Writeup-GreenGoblin.md)
+- [Nice Try](./Forensics/Nice%20Try) - [Writeup](./Forensics/Nice%20Try/Writeup-NiceTry.md)
 - [Polar Fragments](./Forensics/Polar%20Fragments)
 - [Vitalis Night Shift](./Forensics/Vitalis%20Night%20Shift)
 - [After Cleanup](./Forensics/After%20Cleanup)
 - [BasicQnA](./Forensics/BasicQnA)
 
 ## Hardware
-- [10X54](./Hardware/10X54)
-- [Barely Legal Experience](./Hardware/Barely%20Legal%20Experience)
-- [XTS-AES](./Hardware/XTS-AES)
+- [10X54](./Hardware/10X54) - [Writeup](./Hardware/10X54/Writeup-10X54.md)
+- [Barely Legal Experience](./Hardware/Barely%20Legal%20Experience) - [Writeup](./Hardware/Barely%20Legal%20Experience/Writeup-Barely_Legal_Experience.md)
+- [XTS-AES](./Hardware/XTS-AES) - [Writeup](./Hardware/XTS-AES/Writeup-XTS-AES.md)
 
 ## Misc
-- [Atari 2600](./Misc/Atari%202600)
+- [Atari 2600](./Misc/Atari%202600) 
 - [Classless](./Misc/Classless)
 - [Dead Signal](./Misc/Dead%20Signal)
 - [Diddy License Checker](./Misc/Diddy%20License%20Checker)
