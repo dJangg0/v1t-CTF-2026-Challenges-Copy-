@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FAQ · V1t CTF 2026</title>
+  <link rel="icon" href="files/312eb53f3a20ea0acffd06ef8791fb27/V1t.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <header class="nav">
+    <a class="brand" href="index.html"><img src="files/312eb53f3a20ea0acffd06ef8791fb27/V1t.png" alt=""> V1T CTF 2026</a>
+    <nav>
+      <a class="" href="index.html">Home</a>
+      <a class="" href="challenges.html">Challenges</a>
+      <a class="" href="scoreboard.html">Scoreboard</a>
+      <a class="" href="teams.html">Teams</a>
+      <a class="active" href="faq.html">FAQ</a>
+      <a class="" href="sponsor.html">Sponsor</a>
+    </nav>
+  </header>
+  <main><article class="content-page"><style>
+/* =========================================
+   🦆 V1T FAQ PAGE STYLE
+   ========================================= */
+.v1t-faq-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 15px; 
+    min-height: calc(100vh - 150px);
+}
+
+.v1t-faq-card {
+    background-color: var(--duck-yellow, #FFD54F);
+    border: 4px solid var(--duck-line, #2d2d2d);
+    border-radius: 15px;
+    padding: 40px;
+    width: 100%;
+    max-width: 800px;
+    box-shadow: 8px 8px 0 var(--duck-line, #2d2d2d), 12px 12px 0 var(--duck-orange, #FF8F00);
+    position: relative;
+    z-index: 5;
+}
+
+/* Giả lập thanh tab bar của cửa sổ máy tính */
+.v1t-faq-card::before {
+    content: "■ ■ ■";
+    position: absolute;
+    top: -24px;
+    left: 20px;
+    color: var(--duck-line, #2d2d2d);
+    font-size: 14px;
+    background: var(--duck-yellow, #FFD54F);
+    padding: 4px 15px;
+    border: 4px solid var(--duck-line, #2d2d2d);
+    border-bottom: none;
+    border-radius: 10px 10px 0 0;
+}
+
+.v1t-faq-card h1 {
+    font-family: "Press Start 2P", monospace;
+    color: var(--duck-orange, #FF8F00);
+    text-shadow: 2px 2px 0 var(--duck-line, #2d2d2d);
+    text-align: center;
+    margin-bottom: 40px;
+    line-height: 1.5;
+    font-size: 24px;
+}
+
+/* 🌟 STYLE CHO CÁC KHỐI CÂU HỎI (ACCORDION) 🌟 */
+.v1t-faq-card details {
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 3px solid var(--duck-line, #2d2d2d);
+    border-radius: 10px;
+    margin-bottom: 20px;
+    overflow: hidden; /* Giữ cho nội dung không bị tràn ra viền bo tròn */
+    box-shadow: 4px 4px 0 var(--duck-line, #2d2d2d);
+    transition: all 0.2s ease-in-out;
+}
+
+/* Hiệu ứng khi ấn mở câu hỏi (lún xuống) */
+.v1t-faq-card details[open] {
+    box-shadow: 2px 2px 0 var(--duck-line, #2d2d2d);
+    transform: translate(2px, 2px);
+}
+
+/* Thanh tiêu đề câu hỏi */
+.v1t-faq-card summary {
+    font-family: "Press Start 2P", monospace;
+    font-size: 11px;
+    color: #fff;
+    background-color: var(--duck-orange, #FF8F00);
+    padding: 18px 20px;
+    cursor: pointer;
+    list-style: none; /* Giấu cái hình tam giác mặc định chán phèo */
+    position: relative;
+    line-height: 1.5;
+    transition: background 0.2s;
+}
+
+/* Giấu nốt mũi tên mặc định trên Safari/Chrome */
+.v1t-faq-card summary::-webkit-details-marker {
+    display: none;
+}
+
+.v1t-faq-card summary:hover {
+    background-color: #e68100; /* Cam đậm hơn khi lướt chuột */
+}
+
+/* Dấu [+] tự chế mang phong cách Hacker */
+.v1t-faq-card summary::after {
+    content: "[+]";
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    color: var(--duck-line, #2d2d2d);
+}
+
+/* Biến thành dấu [-] khi câu hỏi được mở ra */
+.v1t-faq-card details[open] summary::after {
+    content: "[-]";
+    color: #fff;
+}
+
+/* Nội dung câu trả lời */
+.v1t-faq-card details p {
+    font-family: 'Comic Sans MS', 'Fredoka One', 'Quicksand', cursive, sans-serif;
+    font-size: 15px;
+    color: var(--duck-text, #4E342E);
+    font-weight: bold;
+    line-height: 1.6;
+    padding: 20px;
+    margin: 0;
+    border-top: 3px dashed var(--duck-line, #2d2d2d); /* Đường nét đứt ngăn cách */
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.v1t-faq-card details p b {
+    color: var(--duck-orange, #FF8F00);
+    font-family: "Press Start 2P", monospace;
+    font-size: 10px;
+}
+
+/* Class gạch ngang lầy lội nét mực đỏ */
+.v1t-strike {
+    text-decoration: line-through;
+    text-decoration-color: #ff0000; /* Màu đỏ chót */
+    text-decoration-thickness: 1.6px; /* Nét gạch dày dặn hơn */
+    color: var(--duck-text, #4E342E); /* Vẫn giữ màu đen/nâu cho chữ */
+}
+
+/* Style riêng cho đoạn địa chỉ ví dễ copy */
+.crypto-wallet {
+    font-family: monospace;
+    font-size: 14px;
+    color: var(--duck-line);
+    background: rgba(255, 255, 255, 0.8);
+    padding: 4px 8px;
+    border-radius: 4px;
+    border: 1px solid var(--duck-line);
+    user-select: all; /* Cho phép click 1 lần bôi đen hết */
+    word-break: break-all; /* Tự rớt dòng nếu màn hình bé */
+    display: inline-block;
+    margin-top: 5px;
+}
+</style>
+
+<div class="v1t-faq-wrapper">
+  <div class="v1t-faq-card container">
+    <h1>❓ FAQ (Frequently Asked Questions)</h1>
+
+    <details>
+        <summary>When does the CTF start and end?</summary>
+        <p>From <b>09:00 (UTC+7) — June 27, 2026</b> to <b>21:00 (UTC+7) — June 28, 2026</b>.<br>
+            That’s <b>02:00 UTC — June 27, 2026</b> to <b>14:00 UTC — June 28, 2026</b> if you live elsewhere in the
+            world 🌍.</p>
+    </details>
+
+    <details>
+        <summary>Will there be a participation certificate for the CTF?</summary>
+        <p>Do you really want a certificate signed by a bunch of ducks? ;-; 🦆 jk — we’ll consider it!</p>
+    </details>
+
+    <details>
+        <summary>Are there any prizes?</summary>
+        <p>
+            <span class="v1t-strike">Nope, we’re broke 💸. But hey, if you’d like to sponsor us or send snacks, we’re listening 👀.</span>
+            <br><br>
+            Sike!!! Guess what, we have sponsor nowwww
+        </p>
+    </details>
+
+    <details>
+        <summary>Can I feed the ducks?</summary>
+        <p>
+            Quack yes! We accept bread and crypto. Drop your BTC or ETH here to keep our servers running:
+            <br>
+            <b>BTC:</b> 
+            <span class="crypto-wallet">bc1qyd2v6ld279uqkqjkardhd4y2em8qlrr2zk5r97</span>
+            <br>
+            <b>ETH:</b> 
+            <span class="crypto-wallet">0x40f75CDFd70b8F665df1E226bBe0446E2A7E41c0</span>
+        </p>
+    </details>
+
+    <details>
+        <summary>Are hints available?</summary>
+        <p>I know you're using AI and still failed… so now you're reading this, huh? Gotcha 😏</p>
+    </details>
+
+  </div>
+</div></article></main>
+  <footer class="footer">Powered by CTFd archive · From V1T with Quack!</footer>
+  <script src="assets/data.js"></script>
+  
+</body>
+</html>
