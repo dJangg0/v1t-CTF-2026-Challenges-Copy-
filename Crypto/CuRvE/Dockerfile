@@ -11,4 +11,6 @@ RUN chmod 644 ./chall.py ./flag.txt
 
 EXPOSE 13237
 
-CMD ["socat", "-T", "60", "TCP-LISTEN:13237,reuseaddr,fork", "EXEC:sage chall.py,stderr"]
+# NOTE: no socat -T idle timeout on purpose: the winning solve holds the
+# connection open during the Pollard-rho phase (tens of minutes).
+CMD ["socat", "TCP-LISTEN:13237,reuseaddr,fork", "EXEC:sage chall.py,stderr"]
