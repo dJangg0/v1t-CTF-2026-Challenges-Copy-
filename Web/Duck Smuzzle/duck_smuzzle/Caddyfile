@@ -1,0 +1,23 @@
+:1337 {
+    header {
+        -Server
+        >Date ""
+        -X-Powered-By
+        -Via
+        -Alt-Svc
+    }
+
+    @duck_blocked {
+        path /duck*
+    }
+
+    respond @duck_blocked "Forbidden" 403
+
+    reverse_proxy backend:9999 {
+        header_down -Server
+        header_down -Date
+        header_down -X-Powered-By
+        header_down -Via
+        header_down -Alt-Svc
+    }
+}

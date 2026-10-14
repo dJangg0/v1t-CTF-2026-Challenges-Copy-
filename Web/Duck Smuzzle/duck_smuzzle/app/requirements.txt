@@ -1,0 +1,5 @@
+FastAPI==0.115.7 
+hypercorn==0.18.0
+fastapi-guard==1.5.0
+python-dotenv==1.0.1
+PyJWT==2.10.1

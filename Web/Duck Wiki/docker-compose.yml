@@ -1,0 +1,85 @@
+services:
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: wiki
+      POSTGRES_USER: wikijs
+      POSTGRES_PASSWORD: wikijsrocks
+    restart: unless-stopped
+
+  app:
+    build:
+      context: ./app
+      args:
+        WIKIJS_IMAGE: ghcr.io/requarks/wiki:2
+    depends_on:
+      - db
+    init: true
+    environment:
+      DB_TYPE: postgres
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: wikijs
+      DB_PASS: wikijsrocks
+      DB_NAME: wiki
+      WIKI_SITE_URL: http://localhost:9000
+      WIKI_ADMIN_EMAIL: admin@example.com
+      WIKI_ADMIN_PASSWORD: this_is_fake_password_will_be_changed_in_production 
+      WIKI_ASSISTANT_EMAIL: assistant@example.com
+      WIKI_ASSISTANT_PASSWORD: this_is_fake_password_will_be_changed_in_production
+      WIKI_INIT_PAGE_TITLE: Duck Wiki
+      WIKI_INIT_PAGE_PATH: home
+      WIKI_INIT_PAGE_CONTENT: <h1>Hello world</h1>
+    restart: unless-stopped
+    ports:
+      - "9000:3000"
+    networks:
+      default:
+        aliases:
+          - app.local
+
+  bot:
+    build:
+      context: ./bot
+    depends_on:
+      - app
+    init: true
+    environment:
+      BOT_PORT: 3000
+      APP_BASE_URL: http://app:3000
+      APP_BROWSER_BASE_URL: http://app.local:3000
+      APP_PUBLIC_BASE_URL: http://localhost:9000
+      WIKI_ASSISTANT_EMAIL: assistant@example.com
+      WIKI_ASSISTANT_PASSWORD: this_is_fake_password_will_be_changed_in_production
+      BOT_LOCALSTORAGE_KEY: FLAG
+      BOT_LOCALSTORAGE_VALUE: v1t{fake_flag}
+      BOT_HTML_LIMIT: 20000
+      BOT_MAX_TABS: 20
+      BOT_VISIT_DELAY_MS: 5000
+    restart: unless-stopped
+
+  proxy:
+    build:
+      context: ./proxy
+    depends_on:
+      - bot
+    environment:
+      BACKEND: http://bot:3000
+      PORT: 8080
+      SERVER_NAME: localhost
+      MODSEC_RULE_ENGINE: "On"
+      MODSEC_REQ_BODY_ACCESS: "On"
+      MODSEC_REQ_BODY_LIMIT_ACTION: Reject
+      MODSEC_AUDIT_ENGINE: "Off"
+      BLOCKING_PARANOIA: 1
+      DETECTION_PARANOIA: 1
+      ANOMALY_INBOUND: 5
+      ANOMALY_OUTBOUND: 4
+      ENFORCE_BODYPROC_URLENCODED: 1
+      ALLOWED_METHODS: GET HEAD POST OPTIONS
+      ALLOWED_REQUEST_CONTENT_TYPE: "|application/x-www-form-urlencoded| |application/json|"
+      NGINX_ALWAYS_TLS_REDIRECT: "off"
+      NGINX_PORT_IN_REDIRECT: "off"
+    restart: unless-stopped
+    ports:
+      - "9001:8080"

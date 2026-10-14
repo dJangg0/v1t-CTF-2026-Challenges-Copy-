@@ -1,0 +1,109 @@
+services:
+  app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    image: animeshop-prestashop:9.1.4-ubuntu24.04
+    container_name: animeshop-app
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "${WEB_PORT:-3000}:80"
+    environment:
+      DB_SERVER: db
+      DB_NAME: prestashop
+      DB_USER: prestashop
+      DB_PASSWD: prestashop
+      PS_DOMAIN: "localhost:${WEB_PORT:-3000}"
+      PS_SHOP_NAME: AnimeShop
+      PS_INSTALL_AUTO: "1"
+      PS_ERASE_DB: "1"
+      PS_INSTALL_FIXTURES: "1"
+      PS_THEME: classic
+      PS_FOLDER_ADMIN: admin-dev
+      ADMIN_MAIL: admin@example.com
+      ADMIN_PASSWD: prestashop_demo
+      PS_EXTRA_DOMAINS: app
+      SHOP_CUSTOMER_EMAIL: ${SHOP_CUSTOMER_EMAIL:-assistant@anishop.local}
+      SHOP_CUSTOMER_PASSWORD: ${SHOP_CUSTOMER_PASSWORD:-assistant_demo}
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost/ >/dev/null || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 20
+      start_period: 120s
+
+  db:
+    image: mariadb:10.11
+    container_name: animeshop-db
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: prestashop
+      MARIADB_USER: prestashop
+      MARIADB_PASSWORD: prestashop
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  internal:
+    build:
+      context: ./internal
+      dockerfile: Dockerfile
+    image: animeshop-internal:local
+    container_name: animeshop-internal
+    restart: unless-stopped
+    environment:
+      FLAG: ${FLAG:-v1t{dummy_dummy}}
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "node -e \"require('http').get('http://localhost:5000/', r => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))\"",
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  bot:
+    build:
+      context: ./bot
+      dockerfile: Dockerfile
+    image: animeshop-bot:local
+    container_name: animeshop-bot
+    restart: unless-stopped
+    depends_on:
+      app:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    environment:
+      HOST: 0.0.0.0
+      PORT: "8000"
+      SHOP_BASE_URL: "http://app"
+      WEB_REVIEW_TIMEOUT_MS: "10000"
+      WEB_REVIEW_MAX_CONCURRENT: "20"
+      WEB_REVIEW_LOGIN: ${WEB_REVIEW_LOGIN:-1}
+      SHOP_CUSTOMER_EMAIL: ${SHOP_CUSTOMER_EMAIL:-assistant@anishop.local}
+      SHOP_CUSTOMER_PASSWORD: ${SHOP_CUSTOMER_PASSWORD:-assistant_demo}
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "node -e \"require('http').get('http://127.0.0.1:'+(process.env.PORT||8000)+'/healthz', r => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))\"",
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+volumes:
+  db_data:

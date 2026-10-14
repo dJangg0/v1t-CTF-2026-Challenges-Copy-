@@ -1,0 +1,49 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: app/Dockerfile
+    container_name: backend
+    restart: unless-stopped
+    expose:
+      - "9999"
+    volumes:
+      - ./static:/static:ro
+    networks:
+      - internal_net
+
+  caddy:
+    image: caddy:2.11.4-alpine
+    container_name: caddy
+    restart: unless-stopped
+    ports:
+      - "80:1337"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+    depends_on:
+      - backend
+    networks:
+      - internal_net
+      - public_net
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    restart: unless-stopped
+    ports:
+      - "81:1337"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./static:/static:ro
+    depends_on:
+      - backend
+    networks:
+      - internal_net
+      - public_net
+
+networks:
+  internal_net:
+    internal: true
+
+  public_net:
+    driver: bridge

@@ -1,0 +1,21 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: Duck-nettool
+    ports:
+      - "5000:5000"
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=16m
+      - /run:rw,nosuid,nodev,size=4m
+      - /sys/class/bsg:rw,nosuid,nodev,size=1m
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_RAW
+    pids_limit: 128
+    mem_limit: 256m
+    cpus: 0.50
